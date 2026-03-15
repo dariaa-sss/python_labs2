@@ -122,6 +122,6 @@ set_active_status(status) — изменение статуса
 
 Ошибочные данные — тестирование валидации при создании счета
 
-![img03!](../images/lab01/img03.png)
+![img03!](./images/lab01/img03.png)
 
 

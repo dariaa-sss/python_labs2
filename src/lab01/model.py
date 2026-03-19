@@ -34,6 +34,7 @@ class BankАccount:
     @property
     def balance(self):
         return self._balance
+    
     @balance.setter
     def balance(self, balance: str):
         if not isinstance(balance, (int, float)):

@@ -61,5 +61,5 @@ lab02/
 
 ### Пример вывода (фрагмент)
 
-![img01!](/images/lab02/img01)
+![img01!](/images/lab02/img01.png)
 

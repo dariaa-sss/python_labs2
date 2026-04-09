@@ -322,5 +322,5 @@ if __name__ == "__main__":
     scenario_insufficient_funds()
     scenario_invalid_data()
 ```
-![img01!](./images/lab1/img01.png)
+![img01!](./images/lab01/img01.png)
 

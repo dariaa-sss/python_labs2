@@ -1,5 +1,5 @@
 from base import BankAccount
-from validators import (
+from ..lab02.validators import (
     val_owner,
     val_number,
     val_balance,

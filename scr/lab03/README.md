@@ -12,10 +12,15 @@
 
 lab03/
 ├── README.md
+
 ├── validators.py # функции валидации (из ЛР-1)
+
 ├── base.py # базовый класс BankAccount
+
 ├── models.py # производные классы CreditAccount, SaveAccount
+
 ├── collection.py # класс BankAccountCollection (из ЛР-2 с доп. методами)
+
 └── demo.py # демонстрация всех возможностей
 
 

@@ -1,326 +1,61 @@
-# python_labs2
-
-
-## Лабораторная работа №1  Bank Account
-### Описание 
-```Этот проект представляет собой систему управления банковскими счетами, разработанную в учебных целях. Система позволяет создавать банковские счета, управлять балансом, выполнять переводы между счетами и отслеживать статус активности счетов.```
-
-
-### Структура
-Проект состоит из трех основных файлов:
-
-validators.py — модуль с функциями валидации
-
-model.py — основной класс BankAccount
-
-demo.py — демонстрационные сценарии
-
-Детальное описание файлов
-1. validators.py — Валидация данных
-Этот файл содержит функции для проверки всех данных, которые попадают в систему. 
-
-Функции валидации:
-
- - val_owner(owner) — проверяет имя владельца. 
-    - Должно быть строкой
-    - Не может быть пустым
-    - Содержит только буквы, пробелы и дефисы
-
- - val_number(number) — проверяет номер счета
-
-     - Должен быть строкой
-
-     - Содержит от 8 до 16 цифр
-
-     - Игнорирует пробелы и дефисы
-
- - val_balance(balance) — проверяет баланс
-
-     - Должен быть числом
-
-     - Не может быть отрицательным
-
-     - Округляется до 2 знаков
-
- - val_amount(amount) — проверяет сумму операции
-
-     - Должна быть числом
-
-     - Должна быть больше 0
-
- - val_currency(currency, allowed) — проверяет валюту
-
-     - Должна быть строкой
-
-     - Должна быть в списке разрешенных валют
-
- - val_active(is_active) — проверяет статус активности
-
-     - Должен быть булевым значением
-
- - val_status_change(current, new) — проверяет изменение статуса
-
-     - Статус не может быть изменен на тот же самый
-
-2. model.py — Класс BankAccount
-Это сердце проекта. Здесь реализован сам банковский счет со всеми его методами.
-
-Мой подход к разработке класса:
-
-```Я использовала инкапсуляцию — все важные данные (номер счета, баланс) сделал приватными. Для доступа к балансу использовала @property, что позволяет контролировать изменения.```
-
-## Атрибуты класса:
-
-- owner — владелец счета
-
-- _number — номер счета (приватный)
-
-- _balance — баланс (приватный)
-
-- currency — валюта
-
-- is_active — статус активности
-
-- _transaction_history — история операций
-
-
-## Основные методы класса:
-
-- top_up(amount) — пополнение счета
-
-- withdraw(amount) — снятие средств
-
-- transfer_to(target, amount) — перевод на другой счет
-
-- set_active_status(status) — изменение статуса
-
-
-```Я выбрала такую архитектуру, потому что хотел, чтобы класс был максимально приближен к реальному банковскому счету. Все операции проверяют:```
-
-- Достаточно ли средств
-
-- Активен ли счет
-
-Корректна ли сумма
-
-3. demo.py — Демонстрация работы
-Этот файл показывает, как система работает в реальных сценариях. Я создал несколько сценариев, чтобы проверить разные ситуации.
-
-## Сценарии:
-
-### Успешные операции — демонстрация нормальной работы
-
-![img01!](../../images/lab01/img01.png)
-
-
-### Недостаточно средств — проверка обработки ошибок
-
-![img02!](../../images/lab01/img02.png)
-
-
-### Ошибочные данные — тестирование валидации при создании счета
-
-![img03!](../../images/lab01/img03.png)
-
-
-=======
-## Лабораторная работа №1
-
-### validators.py
-
-```python
-import re
-
-
-def val_owner(owner: str) -> str:
-
-    if not isinstance(owner, str):
-        raise TypeError("Имя владельца должно быть строкой")
-
-    owner = owner.strip()
-
-    if not owner:
-        raise ValueError("Имя владельца не может быть пустым")
-
-    return owner
-
-
-def val_number(number: str) -> str:
-
-    if not isinstance(number, str):
-        raise TypeError("Номер счета должен быть строкой")
-
-    if not re.fullmatch(r"\d{8,16}", number):
-        raise ValueError("Номер счета должен содержать от 8 до 16 цифр")
-
-    return number
-
-
-def val_balance(balance: float) -> float:
-  
-    if not isinstance(balance, (int, float)):
-        raise TypeError("Баланс должен быть числом")
-
-    if balance < 0:
-        raise ValueError("Недостаточно средств на счете")
-
-    return float(balance)
-
-
-def val_amount(amount: float) -> float:
-   
-    if not isinstance(amount, (int, float)):
-        raise TypeError("Сумма должна быть числом")
-
-    if amount <= 0:
-        raise ValueError("Сумма должна быть больше 0")
-
-    return float(amount)
-
-
-def val_currency(currency: str, allowed: tuple) -> str:
-  
-    if not isinstance(currency, str):
-        raise TypeError("Валюта должна быть строкой")
-
-    if currency not in allowed:
-        raise ValueError(f"Доступные валюты: {', '.join(allowed)}")
-
-    return currency
-
-
-def val_active(is_active: bool) -> bool:
- 
-    if not isinstance(is_active, bool):
-        raise TypeError("Статус активности должен быть True или False")
-
-    return is_active
-    
-
-def val_activ(active:bool, new_status:bool):
-    if active==new_status: return f'такой статус уже установлен'
-    
-
-    
-```
-### model.py
-
-```python
-from validators import (
-    val_owner,
-    val_number,
-    val_balance,
-    val_currency,
-    val_active,
-)
-
-currencies = ("rub", "dollar")
-
-
-class Bankaccount:
-
-    def __init__(self, owner, number, balance, currency, is_active):
-        self.owner = val_owner(owner)
-        self._number = val_number(number)
-        self.balance = val_balance(balance)
-        self._currency = val_currency(currency, currencies)
-        self.is_active = val_active(is_active)
-    
-    def __str__(self):
-        return f'владелец счета {self.owner},номер карты {self._number}'
-
-    def __repr__(self):
-        return f'owner={self.owner}, number={self._number}'
-    
-    def __eq__(self, other):
-        if not isinstance(other,Bankaccount):
-            return NotImplemented
-        return self.owner== other.owner and self._number== other._number
-
-         
-
-    @property
-    def currency(self):
-        return self._curency 
-    @currency.setter
-    def currency(self, val: str):
-        if val not in currencies:
-            raise ValueError('недопустимая валюта')
-        if val == self._currency:
-            raise ValueError('выберите другую валюту')
-        self._currency = val
-    
-    def top_balance(self,amount:float):
-        self.balance+=amount
-        return val_balance(self.balance) and f'(f"Баланс после пополнения: {self.balance}'
-    
-    def transfer_balance(self,amount:float):
-        self.balance-=amount
-        return val_balance(self.balance) and f"Баланс после перевода: {self.balance}"
-    
-    def active(self,mood:bool):
-        self.is_active=mood
-        return val_active(self.is_active)
-
-
-
-user1=Bankaccount('dima','12345678',100,'rub',True)
-print(user1)
-```
-### demo.py
-```python
-from model import Bankaccount
-
-
-currencies = ("rub", "dollar")
-
-
-def scenario_success():
-    
-    print("Сценарий 1: Успешные операции ")
-
-    user = Bankaccount("Dima", "12345678", 1000, "rub", True)
-    print(user)
-
-    user.top_balance(500)
-    print(f"Баланс после пополнения: {user.balance}")
-
-    user.transfer_balance(300)
-    print(f"Баланс после перевода: {user.balance}")
-
-    print()
-
-
-def scenario_insufficient_funds():
-
-    print("Сценарий 2: Недостаточно средств")
-
-    user = Bankaccount("Anna", "87654321", 200, "rub", True)
-
-    try:
-        user.transfer_balance(500)
-    except ValueError as e:
-        print(f"Ошибка: {e}")
-
-    print()
-
-
-def scenario_invalid_data():
- 
-    print("Сценарий 3: Ошибочные данные")
-
-    try:
-        user = Bankaccount("", "12ab", -100, "euro", "yes")
-    except (ValueError, TypeError) as e:
-        print(f"Ошибка при создании счета: {e}")
-
-    print()
-
-
-if __name__ == "__main__":
-    scenario_success()
-    scenario_insufficient_funds()
-    scenario_invalid_data()
-```
-![img01!](./images/lab01/img01.png)
-
+# Лабораторная работа №6: Generics и typing
+
+## Цель работы
+Освоить систему аннотаций типов в Python, научиться создавать обобщённые (generic) классы с помощью `TypeVar` и `Generic`, а также понять концепцию структурной типизации через `Protocol`.
+
+## Описание реализованных типов и контейнеров
+
+### Аннотации типов в классах из ЛР‑1
+Классы банковских счетов (`BankAccount`, `CreditAccount`, `SaveAccount`) дополнены аннотациями типов для всех параметров конструкторов, возвращаемых значений методов и атрибутов в `__init__`. Это улучшает читаемость и позволяет статическим анализаторам (mypy) выявлять ошибки на этапе разработки.
+
+### Generic‑коллекция `TypedCollection`
+Создан новый класс `TypedCollection`, который повторяет интерфейс коллекции из ЛР‑2, но является типобезопасным благодаря использованию `TypeVar T`. Класс поддерживает следующие операции:
+- добавление и удаление элементов
+- получение всех элементов
+- определение размера и проверка на пустоту
+- поиск первого элемента по предикату (`find`)
+- фильтрация (`filter`)
+- преобразование элементов с возможностью смены типа результата (`map`)
+
+### Протоколы и структурная типизация
+Определены два протокола:
+- `Displayable` – требует наличия метода `display() -> str`
+- `Scorable` – требует наличия метода `score() -> float`
+
+Классы счетов не наследуют эти протоколы, но содержат методы с нужными сигнатурами. Благодаря структурной типизации (утиная типизация) они автоматически считаются совместимыми с протоколами.
+
+### TypeVar с ограничениями
+Для демонстрации работы с протоколами созданы переменные типа `D` и `S` с ограничением `bound`. Функции, принимающие `TypedCollection[D]` или `TypedCollection[S]`, могут работать только с коллекциями объектов, поддерживающих соответствующий протокол. Это проверяется статически.
+
+## Демонстрация работы
+
+Программа `demo.py` выполняет три сценария.
+
+### Сценарий 1 (базовая работа – оценка 3)
+- Создаётся коллекция для `BankAccount`.
+- Добавляются обычные, кредитные и накопительные счета.
+- Выводится содержимое коллекции через метод `display()`.
+- Удаляется один счёт, отображается изменение размера.
+![img01!](/images/lab06/img01.png) 
+
+### Сценарий 2 (методы `find`, `filter`, `map` – оценка 4)
+- `find` находит счёт с балансом больше 10000 и возвращает его; при поиске несуществующего баланса возвращает `None`.
+- `filter` отбирает активные счета.
+- `map` преобразует коллекцию в список владельцев (тип `str`), список балансов (тип `float`), а также в список строковых описаний.
+![img01!](/images/lab06/img02.png) 
+### Сценарий 3 (протоколы и `TypeVar` с `bound` – оценка 5)
+- Создаётся коллекция `TypedCollection[Displayable]`, в которую добавляются объекты разных типов (`BankAccount`, `CreditAccount`, `SaveAccount`). Для всех объектов вызывается `display()` – демонстрация совместимости с протоколом без наследования.
+- Аналогично создаётся коллекция `TypedCollection[Scorable]`, для элементов вызывается `score()`.
+- Дополнительно показывается, что список `list[Displayable]` может содержать разнородные объекты, не наследующие протокол, но имеющие нужный метод.
+![img01!](/images/lab06/img03.png) 
+Все три сценария успешно выполняются, вывод программы подтверждает корректную работу типов, методов и протоколов. Скриншот вывода прилагается.
+
+## Вывод
+
+В ходе лабораторной работы изучены и применены на практике:
+- аннотации типов для повышения надёжности и самодокументируемости кода;
+- создание обобщённых классов с помощью `TypeVar` и `Generic`;
+- функциональные методы `find`, `filter`, `map` с корректными аннотациями;
+- структурная типизация через `Protocol`, позволяющая использовать объекты без явного наследования, если они имеют нужные методы.
+
+Типизация помогает отлавливать ошибки на этапе написания кода, улучшает поддержку и читаемость проектов.

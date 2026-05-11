@@ -1,4 +1,4 @@
-# demo.py
+
 from base import BankAccount
 from model import CreditAccount, SaveAccount
 from container import Displayable, Scorable, TypedCollection, D, S

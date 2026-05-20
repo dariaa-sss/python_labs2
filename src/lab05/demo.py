@@ -81,5 +81,7 @@ def main():
     rich = col.filter_by(min_balance_filter)
     print_collection("Счета с балансом >= 100 000 (фабрика фильтров)", rich)
 
+    print(SaveAccount.__mro__)
+
 if __name__ == "__main__":
     main()

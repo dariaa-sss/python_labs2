@@ -1,0 +1,18 @@
+[
+  {
+    "type": "BankAccount",
+    "owner": "Анна",
+    "number": "222222222",
+    "balance": 5000.0,
+    "currency": "rub",
+    "is_active": true
+  },
+  {
+    "type": "BankAccount",
+    "owner": "даша",
+    "number": "7612345678",
+    "balance": 10000.0,
+    "currency": "rub",
+    "is_active": true
+  }
+]

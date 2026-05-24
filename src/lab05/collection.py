@@ -1,4 +1,5 @@
-from model import BankAccount
+from lab06.base import BankAccount
+from lab06.model import SaveAccount, CreditAccount
 from interfaces import Printable, Comparable
 
 class BankAccountCollection:
@@ -6,12 +7,14 @@ class BankAccountCollection:
         self._items = []
 
     def add(self, account):
+        print(f"isinstance check: {isinstance(account, BankAccount)}")
+        print(f"type(account): {type(account)}")
+        print(f"id BankAccount в collection: {id(BankAccount)}")
+        print(f"id type(account): {id(type(account))}")
         if not isinstance(account, BankAccount):
             raise TypeError("Неверный объект")
-        for existing in self._items:
-            if existing._number == account._number:
-                raise ValueError(f"Аккаунт с таким номером уже добавлен")
         self._items.append(account)
+        
 
     def remove(self, account):
         if not isinstance(account, BankAccount):

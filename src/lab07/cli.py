@@ -6,10 +6,16 @@ from exceptions import AccountNotFoundError, DuplicateAccountError
 
 
 class CLI:
+    '''консольное меню и обработка ввода'''
     def __init__(self) -> None:
         self._app: App = App()
 
     def run(self) -> None:
+        '''
+        главный цикл приложения,загружает данные, 
+        отображает меню и перенаправляет команды пользователя,
+        при выходе из цикла сохраняет данные
+        '''
         self._app.load_data()
         print("Данные загружены.")
 
@@ -41,6 +47,7 @@ class CLI:
                 print("Нет такого пункта. Попробуйте снова.")
 
     def _print_menu(self) -> None:
+        '''выводит список доступных действий в консоль'''
         print("  Главное меню")
         print("\n")
         print("1. Добавить счёт")
@@ -55,6 +62,8 @@ class CLI:
         print("\n")
 
     def _get_int(self, prompt: str) -> int:
+        '''запрашивает у пользователя целое число, проверяет на корректность,
+        повторяет запрос при вводе некорректных данных'''
         while True:
             try:
                 return int(input(prompt))
@@ -62,6 +71,8 @@ class CLI:
                 print("Ошибка: введите целое число.")
 
     def _get_float(self, prompt: str) -> float:
+        '''запрашивает у пользователя нецелое число, проверяет на корректность,
+        повторяет запрос при вводе некорректных данных'''
         while True:
             try:
                 return float(input(prompt))
@@ -69,10 +80,12 @@ class CLI:
                 print("Ошибка: введите число.")
 
     def _confirm(self, message: str) -> bool:
+        '''проверяет, точно ли пользователь уверен в своем выборе'''
         ans = input(f"{message} (y/n): ").strip().lower()
         return ans == "y"
 
     def _print_table(self, accounts: list) -> None:
+        '''форматирует и выводит список счетов в виде таблицы'''
         if not accounts:
             print("Список пуст.")
             return

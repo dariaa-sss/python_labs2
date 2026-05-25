@@ -4,6 +4,7 @@ from lab06.model import CreditAccount, SaveAccount
 
 
 def _account_to_dict(account: BankAccount) -> dict:
+    '''преобразует объект в словарь'''
     data = {
         "type": type(account).__name__,
         "owner": account.owner,
@@ -23,6 +24,7 @@ def _account_to_dict(account: BankAccount) -> dict:
 
 
 def _dict_to_account(data: dict) -> BankAccount:
+    '''создание объекта нужного счета из словаря'''
     t = data["type"]  
     if t == "CreditAccount":
         return CreditAccount(
@@ -57,12 +59,14 @@ def _dict_to_account(data: dict) -> BankAccount:
 
 
 def save(accounts: list, filepath: str) -> None:
+    '''сохраняет список счетов в json'''
     data = [_account_to_dict(acc) for acc in accounts]
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 def load(filepath: str) -> list:
+    '''загружает список счетов из json'''
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             data = json.load(f)

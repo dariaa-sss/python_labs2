@@ -1,4 +1,3 @@
-from typing import Optional
 from app import App
 from lab06.base import BankAccount
 from lab06.model import CreditAccount, SaveAccount

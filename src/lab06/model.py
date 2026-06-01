@@ -1,6 +1,6 @@
 
-from base import BankAccount
-from validators import val_owner, val_number, val_balance, val_currency, val_active
+from lab06.base import BankAccount
+from lab06.validators import val_owner, val_number, val_balance, val_currency, val_active
 
 class CreditAccount(BankAccount):
     def __init__(self, owner: str, number: str, balance: float, currency: str,

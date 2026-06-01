@@ -1,7 +1,7 @@
 # base.py
 from typing import Optional
-from interfaces import Printable, Comparable
-from validators import val_owner, val_number, val_balance, val_currency, val_active
+from lab06.interfaces import Printable, Comparable
+from lab06.validators import val_owner, val_number, val_balance, val_currency, val_active
 
 CURRENCIES = ("rub", "dollar")
 

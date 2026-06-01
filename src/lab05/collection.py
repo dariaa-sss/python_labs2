@@ -1,16 +1,12 @@
 from lab06.base import BankAccount
 from lab06.model import SaveAccount, CreditAccount
-from interfaces import Printable, Comparable
+from lab06.interfaces import Printable, Comparable
 
 class BankAccountCollection:
     def __init__(self):
         self._items = []
 
     def add(self, account):
-        print(f"isinstance check: {isinstance(account, BankAccount)}")
-        print(f"type(account): {type(account)}")
-        print(f"id BankAccount в collection: {id(BankAccount)}")
-        print(f"id type(account): {id(type(account))}")
         if not isinstance(account, BankAccount):
             raise TypeError("Неверный объект")
         self._items.append(account)
@@ -88,7 +84,7 @@ class BankAccountCollection:
         return self
 
     def filter_by(self, predicate):
-        new_coll = self.__class__()   # создаём экземпляр того же класса
+        new_coll = self.__class__()   
         for item in self._items:
             if predicate(item):
                 new_coll.add(item)

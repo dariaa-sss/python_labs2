@@ -1,6 +1,6 @@
 from base import BankAccount
-from model import CreditAccount, SaveAccount
-from collection import BankAccountCollection
+from lab06.model import CreditAccount, SaveAccount
+from lab05.collection import BankAccountCollection
 from strategies import (by_balance, by_owner, key_owner_balance, 
                         filter_active, filter_vip_balance, 
                         make_min_balance_filter, FeeStrategy)

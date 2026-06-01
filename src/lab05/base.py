@@ -1,5 +1,5 @@
-from interfaces import Printable, Comparable
-from validators import (
+from lab06.interfaces import Printable, Comparable
+from lab06.validators import (
     val_owner,
     val_number,
     val_balance,

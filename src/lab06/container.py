@@ -1,5 +1,5 @@
 from typing import TypeVar, Generic, List, Callable, Optional, Protocol, Any
-from interfaces import Printable, Comparable
+from lab06.interfaces import Printable, Comparable
 
 class Displayable(Protocol):
     def display(self) -> str:

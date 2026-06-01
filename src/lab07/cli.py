@@ -1,7 +1,7 @@
 from app import App
 from lab06.base import BankAccount
 from lab06.model import CreditAccount, SaveAccount
-from exceptions import AccountNotFoundError, DuplicateAccountError
+from lab07.exceptions import AccountNotFoundError, DuplicateAccountError
 
 
 class CLI:
@@ -102,48 +102,39 @@ class CLI:
             )
 
     def _add_account(self) -> None:
-        print("\nТип счёта:")
-        print("1. BankAccount")
-        print("2. CreditAccount")
-        print("3. SaveAccount")
-        type_choice = self._get_int("Выберите тип: ")
+        """Сбор данных для создания нового счёта и отправка их в слой бизнес-логики"""
+        print("\n--- Добавление нового счёта ---")
+        print("1. Обычный счёт (BankAccount)")
+        print("2. Кредитный счёт (CreditAccount)")
+        print("3. Накопительный счёт (SaveAccount)")
+        
+        type_choice = self._get_int("Выберите тип счёта: ")
+        if type_choice not in [1, 2, 3]:
+            print("Ошибка: Неверный выбор типа.")
+            return
+
         owner = input("Владелец: ").strip()
-        number = input("Номер (8–16 цифр): ").strip()
-        balance = self._get_float("Баланс: ")
-        currency = input("Валюта (rub/dollar): ").strip()
-        is_active_str = input("Активен? (y/n): ").strip().lower()
-        is_active = is_active_str == "y"
+        number = input("Номер счёта (8-16 цифр): ").strip()
+        balance = self._get_float("Начальный баланс: ")
+        currency = input("Валюта (rub/usd/eur): ").strip().lower()
+        is_active = self._confirm("Активировать счёт сразу?")
 
+        kwargs = {}
         try:
-            if type_choice == 1:
-                account = BankAccount(owner, number, balance, currency, is_active)
-
-            elif type_choice == 2:
-                lim = self._get_float("Кредитный лимит: ")
-                percentages = self._get_float("Ставка (%): ")
-                min_count = self._get_float("Минимальный платёж: ")
-                account = CreditAccount(
-                    owner, number, balance, currency, is_active,
-                    lim, percentages, min_count
-                )
-
+            if type_choice == 2:
+                kwargs['lim'] = self._get_float("Кредитный лимит: ")
+                kwargs['percentages'] = self._get_float("Ставка (%): ")
+                kwargs['min_count'] = self._get_float("Минимальный платёж: ")
             elif type_choice == 3:
-                percentages = self._get_float("Ставка (%): ")
-                account = SaveAccount(
-                    owner, number, balance, currency, is_active, percentages
-                )
+                kwargs['percentages'] = self._get_float("Ставка (%): ")
 
-            else:
-                print("Неверный тип.")
-                return
+            account = self._app.create_and_add_account(
+                type_choice, owner, number, balance, currency, is_active, **kwargs
+            )
+            print(f"\nУспешно создано: {account.owner} (№ {account._number})")
 
-            self._app.add_account(account)
-            print("Счёт добавлен.")
-
-        except DuplicateAccountError as e:
-            print(f"Ошибка: {e}")
-        except (ValueError, TypeError) as e:
-            print(f"Ошибка данных: {e}")
+        except (DuplicateAccountError, ValueError, TypeError) as e:
+            print(f"\nОшибка при создании счёта: {e}")
 
     def _show_all(self) -> None:
         accounts = self._app.get_all()

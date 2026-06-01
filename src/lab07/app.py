@@ -1,7 +1,8 @@
 from typing import List
 from lab06.base import BankAccount
+from lab06.model import CreditAccount, SaveAccount
 from lab05.collection import BankAccountCollection
-from exceptions import AccountNotFoundError, DuplicateAccountError
+from lab07.exceptions import AccountNotFoundError, DuplicateAccountError
 import storage
 
 '''
@@ -23,14 +24,32 @@ class App:
         '''сохраняет состояние коллекции в файл'''
         storage.save(self._collection.get_all(), self._path)
 
-    def add_account(self, account: BankAccount) -> None:
-        '''добавление аккаунта в коллекцию'''
-        existing = self._collection.find_by_number(account._number)
+    def create_and_add_account(self, type_choice: int, owner: str, number: str, 
+                               balance: float, currency: str, is_active: bool, **kwargs) -> BankAccount:
+        """
+        создает объект нужного класса и сохраняет его в коллекцию
+        """
+        existing = self._collection.find_by_number(number)
         if existing is not None:
-            raise DuplicateAccountError(
-                f"Счёт с номером {account._number} уже существует"
+            raise DuplicateAccountError(f"Счёт с номером {number} уже существует")
+
+        if type_choice == 1:
+            account = BankAccount(owner, number, balance, currency, is_active)
+        elif type_choice == 2:
+            account = CreditAccount(
+                owner, number, balance, currency, is_active,
+                kwargs.get('lim'), kwargs.get('percentages'), kwargs.get('min_count')
             )
+        elif type_choice == 3:
+            account = SaveAccount(
+                owner, number, balance, currency, is_active,
+                kwargs.get('percentages')
+            )
+        else:
+            raise ValueError("Неизвестный тип счёта")
+
         self._collection.add(account)
+        return account
     
 
     def get_all(self) -> List[BankAccount]:

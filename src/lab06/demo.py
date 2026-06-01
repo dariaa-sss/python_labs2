@@ -1,7 +1,7 @@
 
-from base import BankAccount
-from model import CreditAccount, SaveAccount
-from container import Displayable, Scorable, TypedCollection, D, S
+from lab06.base import BankAccount
+from lab06.model import CreditAccount, SaveAccount
+from lab06.container import Displayable, Scorable, TypedCollection, D, S
 
 def main() -> None:
 
